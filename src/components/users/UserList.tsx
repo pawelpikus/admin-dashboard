@@ -1,19 +1,24 @@
-import { Button, Container, Stack, Row, Table } from "react-bootstrap";
+import { Button, Stack, Row, Table } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import { useAppSelector } from "../../hooks";
+import Layout from "./Layout";
 
 const UserList = () => {
   const users = useAppSelector((state) => state.users);
   return (
-    <Container className="my-4">
+    <Layout>
       <Row>
-        <h1 className="py-3 px-0">Dashboard</h1>
-      </Row>
-      <Row>
-        <Stack direction="horizontal" gap={3} className="mb-4 bg-light p-3">
+        <Stack
+          direction="horizontal"
+          gap={3}
+          className="d-flex justify-content-between ms-auto bg-light p-3"
+        >
           <h4>User List</h4>
-          <Button variant="primary" className="ms-auto">
-            Add user
-          </Button>
+          <Link to="/add-user">
+            <Button variant="primary" className="ms-auto">
+              Add user
+            </Button>
+          </Link>
         </Stack>
       </Row>
       <Row>
@@ -48,7 +53,7 @@ const UserList = () => {
           </tbody>
         </Table>
       </Row>
-    </Container>
+    </Layout>
   );
 };
 

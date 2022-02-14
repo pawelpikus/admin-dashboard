@@ -20,7 +20,13 @@ const initialState = [
 const userSlice = createSlice({
   name: "users",
   initialState,
-  reducers: {},
+  reducers: {
+    userAdded(state, action) {
+      state.push(action.payload);
+    },
+  },
 });
+
+export const { userAdded } = userSlice.actions;
 
 export default userSlice.reducer;
