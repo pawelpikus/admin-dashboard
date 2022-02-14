@@ -1,4 +1,3 @@
-import React from "react";
 import ReactDOM from "react-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import App from "./App";
@@ -8,6 +7,7 @@ import UserList from "./components/users/UserList";
 import { Provider } from "react-redux";
 import { store } from "./store";
 import AddUser from "./components/users/AddUser";
+import EditUser from "./components/users/EditUser";
 
 ReactDOM.render(
   <Provider store={store}>
@@ -17,7 +17,7 @@ ReactDOM.render(
           <Route index element={<UserList />} />
         </Route>
         <Route path="/add-user" element={<AddUser />}></Route>
-        <Route path="/edit-user" element={<h1>Edit user</h1>}></Route>
+        <Route path="/edit-user/:id" element={<EditUser />}></Route>
       </Routes>
     </BrowserRouter>
   </Provider>,

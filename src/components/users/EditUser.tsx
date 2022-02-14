@@ -1,22 +1,27 @@
-import React, { useState, useRef } from "react";
-import { Button, Col, Form, Row } from "react-bootstrap";
-import { useDispatch } from "react-redux";
-import { useNavigate, Link } from "react-router-dom";
+import { useState, useRef } from "react";
+import { userUpdated } from "./usersSlice";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { useAppSelector } from "../../hooks";
-import { hasKey } from "../../utils/hasKey";
+import { useDispatch } from "react-redux";
+import { Row, Form, Col, Button } from "react-bootstrap";
 import Layout from "./Layout";
-import { userAdded } from "./usersSlice";
+import { hasKey } from "../../utils/hasKey";
 
-const AddUser = () => {
-  const dispatch = useDispatch();
-  let navigate = useNavigate();
+const EditUser = () => {
+  const { pathname } = useLocation();
+  const userId = pathname.replace("/edit-user/", "");
+  const user = useAppSelector((state) =>
+    state.users.find((user) => user.id === userId)
+  );
   const [form, setForm] = useState({
-    name: "",
-    email: "",
+    name: user?.name,
+    email: user?.email,
   });
   const [errors, setErrors] = useState({ name: "", email: "" });
   const [validated, setValidated] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const setField = (field: string, value: string) => {
     setForm({
@@ -44,8 +49,6 @@ const AddUser = () => {
     return newErrors;
   };
 
-  const usersAmount = useAppSelector((state) => state.users.length);
-
   const handleReset = () => {
     if (formRef.current) {
       formRef.current.reset();
@@ -66,8 +69,8 @@ const AddUser = () => {
       setErrors(newErrors);
     } else {
       dispatch(
-        userAdded({
-          id: usersAmount + 1,
+        userUpdated({
+          id: userId,
           name: form.name,
           email: form.email,
         })
@@ -81,7 +84,7 @@ const AddUser = () => {
   return (
     <Layout>
       <Row className="border bg-light mb-4 py-4">
-        <h4>Add new User</h4>
+        <h4>Edit User</h4>
       </Row>
       <Form
         ref={formRef}
@@ -132,7 +135,7 @@ const AddUser = () => {
             <Button variant="outline-danger">Cancel</Button>
           </Link>
           <Button className="mx-3" variant="primary" type="submit">
-            Submit
+            Save User
           </Button>
         </div>
       </Form>
@@ -140,4 +143,4 @@ const AddUser = () => {
   );
 };
 
-export default AddUser;
+export default EditUser;

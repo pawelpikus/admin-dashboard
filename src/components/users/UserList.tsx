@@ -43,7 +43,9 @@ const UserList = () => {
                 <td>{email}</td>
                 <td>{city}</td>
                 <td>
-                  <Button variant="warning">Edit</Button>
+                  <Link to={`/edit-user/${id}`}>
+                    <Button variant="warning">Edit</Button>
+                  </Link>
                 </td>
                 <td>
                   <Button variant="danger">Delete</Button>
