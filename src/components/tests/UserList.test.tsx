@@ -1,8 +1,8 @@
 import { render, screen } from "@testing-library/react";
-import App from "./App";
+import UserList from "../UserList";
 
 test("renders without errors", () => {
-  render(<App />);
-  const linkElement = screen.getByText(/Hello world!/i);
+  render(<UserList />);
+  const linkElement = screen.getByText(/Dashboard/i);
   expect(linkElement).toBeInTheDocument();
 });

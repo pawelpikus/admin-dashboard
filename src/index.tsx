@@ -3,11 +3,23 @@ import ReactDOM from "react-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import UserList from "./components/UserList";
+import { Provider } from "react-redux";
+import { store } from "./store";
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  <Provider store={store}>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<App />}>
+          <Route index element={<UserList />} />
+        </Route>
+        <Route path="/add-user" element={<h1>Add user</h1>}></Route>
+        <Route path="/edit-user" element={<h1>Edit user</h1>}></Route>
+      </Routes>
+    </BrowserRouter>
+  </Provider>,
   document.getElementById("root")
 );
 
