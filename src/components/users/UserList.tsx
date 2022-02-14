@@ -1,6 +1,8 @@
 import { Button, Container, Stack, Row, Table } from "react-bootstrap";
+import { useAppSelector } from "../../hooks";
 
 const UserList = () => {
+  const users = useAppSelector((state) => state.users);
   return (
     <Container className="my-4">
       <Row>
@@ -28,32 +30,21 @@ const UserList = () => {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th scope="row">1</th>
-              <td>Mark</td>
-              <td>Otto</td>
-              <td>@mdo</td>
-              <td>NYC</td>
-              <td>
-                <Button variant="warning">Edit</Button>
-              </td>
-              <td>
-                <Button variant="danger">Delete</Button>
-              </td>
-            </tr>
-            <tr>
-              <th scope="row">2</th>
-              <td>Jacob</td>
-              <td>Thornton</td>
-              <td>@fat</td>
-              <td>Oklahoma</td>
-              <td>
-                <Button variant="warning">Edit</Button>
-              </td>
-              <td>
-                <Button variant="danger">Delete</Button>
-              </td>
-            </tr>
+            {users.map(({ id, name, username, email, city }, i) => (
+              <tr key={i}>
+                <th scope="row">{id}</th>
+                <td>{name}</td>
+                <td>{username}</td>
+                <td>{email}</td>
+                <td>{city}</td>
+                <td>
+                  <Button variant="warning">Edit</Button>
+                </td>
+                <td>
+                  <Button variant="danger">Delete</Button>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </Table>
       </Row>
