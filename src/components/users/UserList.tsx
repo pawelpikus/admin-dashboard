@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Stack, Row, Table, Modal, Alert } from "react-bootstrap";
 import { userDeleted } from "./usersSlice";
 import { Link } from "react-router-dom";
@@ -20,6 +20,12 @@ const UserList = () => {
     show: false,
     id: null,
   });
+
+  const [usersAmount, setUsersAmount] = useState(0);
+
+  useEffect(() => {
+    setUsersAmount(users.entities.length);
+  }, [users.entities.length]);
 
   const handleShow = (id: string) => {
     setModal({
@@ -77,6 +83,10 @@ const UserList = () => {
   } else if (error) {
     tableContent = (
       <Alert variant={"danger"}>Failed to load users. Try again later.</Alert>
+    );
+  } else if (usersAmount === 0) {
+    tableContent = (
+      <Alert variant={"warning"}>No users. Try to add someone!</Alert>
     );
   } else {
     tableContent = (
