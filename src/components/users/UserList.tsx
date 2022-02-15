@@ -38,13 +38,13 @@ const UserList = () => {
     if (modal.show && modal.id) {
       try {
         await axios.delete(
-          `https://my-json-server.typicode.com/karolkproexe/jsonplaceholderdb/data/${modal.id}`
+          `https://jsonplaceholder.typicode.com/posts/${modal.id}`
         );
       } catch (e) {
         console.log(e);
       }
 
-      dispatch(userDeleted({ ...users, id: Number(modal.id) }));
+      dispatch(userDeleted({ id: Number(modal.id) }));
       setModal({
         ...modal,
         show: false,

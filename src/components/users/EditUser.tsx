@@ -63,7 +63,7 @@ const EditUser = () => {
     } else {
       try {
         const res = await axios.put(
-          `https://my-json-server.typicode.com/karolkproexe/jsonplaceholderdb/data/${userId}`,
+          `https://jsonplaceholder.typicode.com/posts/${userId}`,
           {
             ...user,
             id: Number(userId),

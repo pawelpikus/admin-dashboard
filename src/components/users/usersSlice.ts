@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 interface userState {
   entities: {
@@ -44,7 +44,7 @@ const userSlice = createSlice({
       const { id } = action.payload;
       const existingUser = state.entities.find((user) => user.id === id);
       if (existingUser) {
-        state.entities.filter((user) => user.id !== id);
+        state.entities = state.entities.filter((user) => user.id !== id);
       }
     },
   },
