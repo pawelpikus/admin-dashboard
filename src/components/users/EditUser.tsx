@@ -7,12 +7,13 @@ import { Row, Form, Col, Button } from "react-bootstrap";
 import Layout from "./Layout";
 import { hasKey } from "../../utils/hasKey";
 import { findFormErrors } from "../../utils/findFormErrors";
+import axios from "axios";
 
 const EditUser = () => {
   const { pathname } = useLocation();
   const userId = pathname.replace("/edit-user/", "");
   const user = useAppSelector((state) =>
-    state.users.entities.find((user) => user.id === userId)
+    state.users.entities.find((user) => user.id.toString() === userId)
   );
   const [form, setForm] = useState({
     name: user?.name,
@@ -48,7 +49,7 @@ const EditUser = () => {
     }
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     event.stopPropagation();
 
@@ -60,9 +61,25 @@ const EditUser = () => {
     if (!isEmptyErrors && newErrors) {
       setErrors(newErrors);
     } else {
+      try {
+        const res = await axios.put(
+          `https://my-json-server.typicode.com/karolkproexe/jsonplaceholderdb/data/${userId}`,
+          {
+            ...user,
+            id: Number(userId),
+            name: form.name,
+            email: form.email,
+          }
+        );
+        console.log(res.data.json);
+      } catch (e) {
+        console.log(e);
+      }
+
       dispatch(
         userUpdated({
-          id: userId,
+          ...user,
+          id: Number(userId),
           name: form.name,
           email: form.email,
         })

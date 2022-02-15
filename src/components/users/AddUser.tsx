@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useState, useRef } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 
@@ -33,7 +34,7 @@ const AddUser = () => {
     }
   };
 
-  const generateUID = () => {
+  const generateUID = (): number => {
     let uid = Math.floor(Math.random() * 100);
     return uid;
   };
@@ -46,7 +47,7 @@ const AddUser = () => {
     }
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     event.stopPropagation();
 
@@ -58,11 +59,31 @@ const AddUser = () => {
     if (!isEmptyErrors && newErrors) {
       setErrors(newErrors);
     } else {
+      try {
+        await axios.post(
+          `https://my-json-server.typicode.com/karolkproexe/jsonplaceholderdb/data/`,
+          {
+            id: generateUID(),
+            name: form.name,
+            email: form.email,
+            username: "",
+            address: {
+              city: "",
+            },
+          }
+        );
+      } catch (e) {
+        console.log(e);
+      }
       dispatch(
         userAdded({
-          id: generateUID().toString(),
+          id: generateUID(),
           name: form.name,
           email: form.email,
+          username: "",
+          address: {
+            city: "",
+          },
         })
       );
       setValidated(true);

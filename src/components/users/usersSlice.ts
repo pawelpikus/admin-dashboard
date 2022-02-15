@@ -1,4 +1,21 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+
+interface userState {
+  entities: {
+    id: number;
+    name: string;
+    username?: string;
+    email: string;
+    address?: {
+      city?: string;
+    };
+  }[];
+  loading: boolean;
+}
+const initialState: userState = {
+  entities: [],
+  loading: false,
+};
 
 export const fetchUsers: any = createAsyncThunk("fetchUsers", async () => {
   const response = await fetch(
@@ -8,29 +25,9 @@ export const fetchUsers: any = createAsyncThunk("fetchUsers", async () => {
   return users;
 });
 
-const initialState = [
-  {
-    id: "1",
-    name: "Harrison Ford",
-    username: "Harry",
-    email: "ford@hollywood.com",
-    city: "San Francisco",
-  },
-  {
-    id: "2",
-    name: "Dave Patrick",
-    username: "Dave",
-    email: "dave@brooklyn.com",
-    city: "New York",
-  },
-];
-
 const userSlice = createSlice({
   name: "users",
-  initialState: {
-    entities: [],
-    loading: false,
-  },
+  initialState,
   reducers: {
     userAdded(state, action) {
       state.entities.push(action.payload);
@@ -47,7 +44,7 @@ const userSlice = createSlice({
       const { id } = action.payload;
       const existingUser = state.entities.find((user) => user.id === id);
       if (existingUser) {
-        return state.entities.filter((user) => user.id !== id);
+        state.entities.filter((user) => user.id !== id);
       }
     },
   },

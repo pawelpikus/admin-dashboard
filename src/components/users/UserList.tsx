@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { Button, Stack, Row, Table, Modal } from "react-bootstrap";
-import { useDispatch } from "react-redux";
+import { Button, Stack, Row, Table, Modal, Alert } from "react-bootstrap";
 import { userDeleted } from "./usersSlice";
 import { Link } from "react-router-dom";
-import { useAppSelector } from "../../hooks";
+import { useAppDispatch, useAppSelector } from "../../hooks";
 import Layout from "./Layout";
+import axios from "axios";
 
 type ModalState = {
   show: boolean;
@@ -13,7 +13,8 @@ type ModalState = {
 
 const UserList = () => {
   const users = useAppSelector((state) => state.users);
-  const dispatch = useDispatch();
+  const loading = useAppSelector((state) => state.users.loading);
+  const dispatch = useAppDispatch();
   const [modal, setModal] = useState<ModalState>({
     show: false,
     id: null,
@@ -33,9 +34,17 @@ const UserList = () => {
       id: null,
     });
 
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = async () => {
     if (modal.show && modal.id) {
-      dispatch(userDeleted({ id: modal.id }));
+      try {
+        await axios.delete(
+          `https://my-json-server.typicode.com/karolkproexe/jsonplaceholderdb/data/${modal.id}`
+        );
+      } catch (e) {
+        console.log(e);
+      }
+
+      dispatch(userDeleted({ ...users, id: Number(modal.id) }));
       setModal({
         ...modal,
         show: false,
@@ -79,40 +88,49 @@ const UserList = () => {
         </Stack>
       </Row>
       <Row>
-        <Table striped bordered hover>
-          <thead>
-            <tr>
-              <th scope="col">Id</th>
-              <th scope="col">Name</th>
-              <th scope="col">Username</th>
-              <th scope="col">Email</th>
-              <th scope="col">City</th>
-              <th scope="col">Edit</th>
-              <th scope="col">Delete</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.entities.map(({ id, name, username, email, city }, i) => (
-              <tr key={i}>
-                <th scope="row">{id}</th>
-                <td>{name}</td>
-                <td>{username}</td>
-                <td>{email}</td>
-                <td>{city}</td>
-                <td>
-                  <Link to={`/edit-user/${id}`}>
-                    <Button variant="warning">Edit</Button>
-                  </Link>
-                </td>
-                <td>
-                  <Button onClick={() => handleShow(id)} variant="danger">
-                    Delete
-                  </Button>
-                </td>
+        {loading ? (
+          <Alert variant={"info"}>Loading users...</Alert>
+        ) : (
+          <Table striped bordered hover>
+            <thead>
+              <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Name</th>
+                <th scope="col">Username</th>
+                <th scope="col">Email</th>
+                <th scope="col">City</th>
+                <th scope="col">Edit</th>
+                <th scope="col">Delete</th>
               </tr>
-            ))}
-          </tbody>
-        </Table>
+            </thead>
+            <tbody>
+              {users.entities.map(
+                ({ id, name, username, email, address }, i) => (
+                  <tr key={i}>
+                    <th scope="row">{id}</th>
+                    <td>{name}</td>
+                    <td>{username}</td>
+                    <td>{email}</td>
+                    <td>{address?.city}</td>
+                    <td>
+                      <Link to={`/edit-user/${id}`}>
+                        <Button variant="warning">Edit</Button>
+                      </Link>
+                    </td>
+                    <td>
+                      <Button
+                        onClick={() => handleShow(id.toString())}
+                        variant="danger"
+                      >
+                        Delete
+                      </Button>
+                    </td>
+                  </tr>
+                )
+              )}
+            </tbody>
+          </Table>
+        )}
       </Row>
     </Layout>
   );
