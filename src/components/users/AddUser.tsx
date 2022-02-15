@@ -1,9 +1,8 @@
 import axios from "axios";
 import React, { useState, useRef } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
-
 import { useNavigate, Link } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../hooks";
+import { useAppDispatch } from "../../hooks";
 import { findFormErrors } from "../../utils/findFormErrors";
 import { hasKey } from "../../utils/hasKey";
 import Layout from "./Layout";
@@ -59,19 +58,17 @@ const AddUser = () => {
     if (!isEmptyErrors && newErrors) {
       setErrors(newErrors);
     } else {
+      const uid = generateUID();
       try {
-        await axios.post(
-          `https://my-json-server.typicode.com/karolkproexe/jsonplaceholderdb/data/`,
-          {
-            id: generateUID(),
-            name: form.name,
-            email: form.email,
-            username: "",
-            address: {
-              city: "",
-            },
-          }
-        );
+        await axios.post(`https://jsonplaceholder.typicode.com/posts/`, {
+          id: uid,
+          name: form.name,
+          email: form.email,
+          username: "",
+          address: {
+            city: "",
+          },
+        });
       } catch (e) {
         console.log(e);
       }

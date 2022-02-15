@@ -11,10 +11,12 @@ interface userState {
     };
   }[];
   loading: boolean;
+  error: boolean;
 }
 const initialState: userState = {
   entities: [],
   loading: false,
+  error: false,
 };
 
 export const fetchUsers: any = createAsyncThunk("fetchUsers", async () => {
@@ -58,6 +60,7 @@ const userSlice = createSlice({
     },
     [fetchUsers.rejected]: (state, action) => {
       state.loading = false;
+      state.error = true;
     },
   },
 });
