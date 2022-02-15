@@ -1,11 +1,12 @@
 import { useState, useRef } from "react";
 import { userUpdated } from "./usersSlice";
 import { useNavigate, useLocation, Link } from "react-router-dom";
-import { useAppSelector } from "../../hooks";
-import { useDispatch } from "react-redux";
+import { useAppDispatch, useAppSelector } from "../../hooks";
+
 import { Row, Form, Col, Button } from "react-bootstrap";
 import Layout from "./Layout";
 import { hasKey } from "../../utils/hasKey";
+import { findFormErrors } from "../../utils/findFormErrors";
 
 const EditUser = () => {
   const { pathname } = useLocation();
@@ -17,10 +18,11 @@ const EditUser = () => {
     name: user?.name,
     email: user?.email,
   });
+
   const [errors, setErrors] = useState({ name: "", email: "" });
   const [validated, setValidated] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const setField = (field: string, value: string) => {
@@ -32,22 +34,12 @@ const EditUser = () => {
       if (!!errors[field])
         setErrors({
           ...errors,
-          [field]: null,
+          [field]: "",
         });
     }
   };
 
-  const findFormErrors = () => {
-    const { name, email } = form;
-    const emailPattern = /^[^@ ]+@[^@ ]+\.[^@ .]{2,}$/;
-    const newErrors = { name: "", email: "" };
-    if (!name || name === "") newErrors.name = "Fill in this field.";
-    else if (name.length > 30) newErrors.name = "Name is too long.";
-    if (!email || email === "") newErrors.email = "Fill in this field.";
-    else if (!email.match(emailPattern))
-      newErrors.email = "Please provide a valid email address.";
-    return newErrors;
-  };
+  findFormErrors(form);
 
   const handleReset = () => {
     if (formRef.current) {
@@ -60,12 +52,12 @@ const EditUser = () => {
     event.preventDefault();
     event.stopPropagation();
 
-    const newErrors = findFormErrors();
-    const isEmptyErrors = Object.values(newErrors).every(
-      (x) => x === null || x === ""
-    );
+    const newErrors = findFormErrors(form);
+    const isEmptyErrors =
+      newErrors &&
+      Object.values(newErrors).every((x) => x === null || x === "");
 
-    if (!isEmptyErrors) {
+    if (!isEmptyErrors && newErrors) {
       setErrors(newErrors);
     } else {
       dispatch(
@@ -102,6 +94,7 @@ const EditUser = () => {
                 onChange={(e) => setField("name", e.target.value)}
                 isInvalid={!!errors.name}
                 required
+                value={form.name}
                 type="text"
                 placeholder="Your Name"
               />
@@ -121,6 +114,7 @@ const EditUser = () => {
                 onChange={(e) => setField("email", e.target.value)}
                 isInvalid={!!errors.email}
                 required
+                value={form.email}
                 type="email"
                 placeholder="Your Email"
               />

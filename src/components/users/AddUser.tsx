@@ -1,14 +1,15 @@
 import React, { useState, useRef } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
-import { useDispatch } from "react-redux";
+
 import { useNavigate, Link } from "react-router-dom";
-import { useAppSelector } from "../../hooks";
+import { useAppDispatch, useAppSelector } from "../../hooks";
+import { findFormErrors } from "../../utils/findFormErrors";
 import { hasKey } from "../../utils/hasKey";
 import Layout from "./Layout";
 import { userAdded } from "./usersSlice";
 
 const AddUser = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   let navigate = useNavigate();
   const [form, setForm] = useState({
     name: "",
@@ -27,25 +28,17 @@ const AddUser = () => {
       if (!!errors[field])
         setErrors({
           ...errors,
-          [field]: null,
+          [field]: "",
         });
     }
   };
 
-  const findFormErrors = () => {
-    const { name, email } = form;
-    const emailPattern = /^[^@ ]+@[^@ ]+\.[^@ .]{2,}$/;
-    const newErrors = { name: "", email: "" };
-    if (!name || name === "") newErrors.name = "Fill in this field.";
-    else if (name.length > 30) newErrors.name = "Name is too long.";
-    if (!email || email === "") newErrors.email = "Fill in this field.";
-    else if (!email.match(emailPattern))
-      newErrors.email = "Please provide a valid email address.";
-    return newErrors;
+  const generateUID = () => {
+    let uid = Math.floor(Math.random() * 100);
+    return uid;
   };
 
-  const usersAmount = useAppSelector((state) => state.users.length);
-
+  findFormErrors(form);
   const handleReset = () => {
     if (formRef.current) {
       formRef.current.reset();
@@ -57,17 +50,17 @@ const AddUser = () => {
     event.preventDefault();
     event.stopPropagation();
 
-    const newErrors = findFormErrors();
-    const isEmptyErrors = Object.values(newErrors).every(
-      (x) => x === null || x === ""
-    );
+    const newErrors = findFormErrors(form);
+    const isEmptyErrors =
+      newErrors &&
+      Object.values(newErrors).every((x) => x === null || x === "");
 
-    if (!isEmptyErrors) {
+    if (!isEmptyErrors && newErrors) {
       setErrors(newErrors);
     } else {
       dispatch(
         userAdded({
-          id: usersAmount + 1,
+          id: generateUID().toString(),
           name: form.name,
           email: form.email,
         })
@@ -99,6 +92,7 @@ const AddUser = () => {
                 onChange={(e) => setField("name", e.target.value)}
                 isInvalid={!!errors.name}
                 required
+                value={form.name}
                 type="text"
                 placeholder="Your Name"
               />
@@ -118,6 +112,7 @@ const AddUser = () => {
                 onChange={(e) => setField("email", e.target.value)}
                 isInvalid={!!errors.email}
                 required
+                value={form.email}
                 type="email"
                 placeholder="Your Email"
               />

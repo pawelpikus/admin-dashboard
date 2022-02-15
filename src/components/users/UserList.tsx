@@ -1,12 +1,69 @@
-import { Button, Stack, Row, Table } from "react-bootstrap";
+import { useState } from "react";
+import { Button, Stack, Row, Table, Modal } from "react-bootstrap";
+import { useDispatch } from "react-redux";
+import { userDeleted } from "./usersSlice";
 import { Link } from "react-router-dom";
 import { useAppSelector } from "../../hooks";
 import Layout from "./Layout";
 
+type ModalState = {
+  show: boolean;
+  id: string | null;
+};
+
 const UserList = () => {
   const users = useAppSelector((state) => state.users);
+  const dispatch = useDispatch();
+  const [modal, setModal] = useState<ModalState>({
+    show: false,
+    id: null,
+  });
+
+  const handleShow = (id: string) => {
+    setModal({
+      show: true,
+      id,
+    });
+  };
+
+  const handleClose = () =>
+    setModal({
+      ...modal,
+      show: false,
+      id: null,
+    });
+
+  const handleConfirmDelete = () => {
+    if (modal.show && modal.id) {
+      dispatch(userDeleted({ id: modal.id }));
+      setModal({
+        ...modal,
+        show: false,
+        id: null,
+      });
+    }
+  };
+
+  const modalComponent = (
+    <Modal show={modal.show} onHide={handleClose}>
+      <Modal.Header closeButton>
+        <Modal.Title>Confirm Delete</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>Are you sure you want to delete the user?</Modal.Body>
+      <Modal.Footer>
+        <Button variant="outline-secondary" onClick={handleClose}>
+          Close
+        </Button>
+        <Button variant="danger" onClick={handleConfirmDelete}>
+          Confirm Delete
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  );
+
   return (
     <Layout>
+      {modal ? modalComponent : null}
       <Row>
         <Stack
           direction="horizontal"
@@ -48,7 +105,9 @@ const UserList = () => {
                   </Link>
                 </td>
                 <td>
-                  <Button variant="danger">Delete</Button>
+                  <Button onClick={() => handleShow(id)} variant="danger">
+                    Delete
+                  </Button>
                 </td>
               </tr>
             ))}

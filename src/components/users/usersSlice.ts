@@ -32,10 +32,16 @@ const userSlice = createSlice({
         existingUser.email = email;
       }
     },
+    userDeleted(state, action) {
+      const { id } = action.payload;
+      const existingUser = state.find((user) => user.id === id);
+      if (existingUser) {
+        return state.filter((user) => user.id !== id);
+      }
+    },
   },
 });
 
-export const { userAdded } = userSlice.actions;
-export const { userUpdated } = userSlice.actions;
+export const { userAdded, userUpdated, userDeleted } = userSlice.actions;
 
 export default userSlice.reducer;
