@@ -12,7 +12,7 @@ const EditUser = () => {
   const { pathname } = useLocation();
   const userId = pathname.replace("/edit-user/", "");
   const user = useAppSelector((state) =>
-    state.users.find((user) => user.id === userId)
+    state.users.entities.find((user) => user.id === userId)
   );
   const [form, setForm] = useState({
     name: user?.name,

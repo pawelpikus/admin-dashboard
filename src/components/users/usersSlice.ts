@@ -1,4 +1,12 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+
+export const fetchUsers: any = createAsyncThunk("fetchUsers", async () => {
+  const response = await fetch(
+    "https://my-json-server.typicode.com/karolkproexe/jsonplaceholderdb/data"
+  );
+  const users = await response.json();
+  return users;
+});
 
 const initialState = [
   {
@@ -19,14 +27,17 @@ const initialState = [
 
 const userSlice = createSlice({
   name: "users",
-  initialState,
+  initialState: {
+    entities: [],
+    loading: false,
+  },
   reducers: {
     userAdded(state, action) {
-      state.push(action.payload);
+      state.entities.push(action.payload);
     },
     userUpdated(state, action) {
       const { id, name, email } = action.payload;
-      const existingUser = state.find((user) => user.id === id);
+      const existingUser = state.entities.find((user) => user.id === id);
       if (existingUser) {
         existingUser.name = name;
         existingUser.email = email;
@@ -34,10 +45,22 @@ const userSlice = createSlice({
     },
     userDeleted(state, action) {
       const { id } = action.payload;
-      const existingUser = state.find((user) => user.id === id);
+      const existingUser = state.entities.find((user) => user.id === id);
       if (existingUser) {
-        return state.filter((user) => user.id !== id);
+        return state.entities.filter((user) => user.id !== id);
       }
+    },
+  },
+  extraReducers: {
+    [fetchUsers.pending]: (state, action) => {
+      state.loading = true;
+    },
+    [fetchUsers.fulfilled]: (state, action) => {
+      state.loading = false;
+      state.entities = [...state.entities, ...action.payload];
+    },
+    [fetchUsers.rejected]: (state, action) => {
+      state.loading = false;
     },
   },
 });

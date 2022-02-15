@@ -92,7 +92,7 @@ const UserList = () => {
             </tr>
           </thead>
           <tbody>
-            {users.map(({ id, name, username, email, city }, i) => (
+            {users.entities.map(({ id, name, username, email, city }, i) => (
               <tr key={i}>
                 <th scope="row">{id}</th>
                 <td>{name}</td>

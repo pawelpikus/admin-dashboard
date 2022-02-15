@@ -8,6 +8,9 @@ import { Provider } from "react-redux";
 import { store } from "./store";
 import AddUser from "./components/users/AddUser";
 import EditUser from "./components/users/EditUser";
+import { fetchUsers } from "./components/users/usersSlice";
+
+store.dispatch(fetchUsers());
 
 ReactDOM.render(
   <Provider store={store}>
