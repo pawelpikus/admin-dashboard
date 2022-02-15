@@ -3,9 +3,6 @@
 ![enter image description here](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
 ver 16.14.0
 
-![enter image description here](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
-ver 16.14
-
 ![enter image description here](https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white)
 ver 5.1.3
 
@@ -42,7 +39,7 @@ Users should be able to:
 ### Links
 
 - Solution repo: [github](https://github.com/pawelpikus/admin-dashboard)
-- Solution URL: [netlify](https://admin-dashboard-nu-six.vercel.app/)
+- Solution URL: [vercel](https://admin-dashboard-nu-six.vercel.app/)
 
 ## Installation
 
