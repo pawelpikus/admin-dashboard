@@ -7,6 +7,7 @@ import { findFormErrors } from "../utils/findFormErrors";
 import { hasKey } from "../utils/hasKey";
 import Layout from "../components/Layout";
 import { userAdded } from "../redux/usersSlice";
+import { generateUID } from "../utils/generateUID";
 
 const AddUser = () => {
   const dispatch = useAppDispatch();
@@ -33,12 +34,8 @@ const AddUser = () => {
     }
   };
 
-  const generateUID = (): number => {
-    let uid = Math.floor(Math.random() * 100);
-    return uid;
-  };
-
   findFormErrors(form);
+
   const handleReset = () => {
     if (formRef.current) {
       formRef.current.reset();
