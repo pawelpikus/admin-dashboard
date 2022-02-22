@@ -62,7 +62,7 @@ const EditUser = () => {
       setErrors(newErrors);
     } else {
       try {
-        const res = await axios.put(
+        await axios.put(
           `https://jsonplaceholder.typicode.com/posts/${userId}`,
           {
             ...user,
@@ -71,7 +71,6 @@ const EditUser = () => {
             email: form.email,
           }
         );
-        console.log(res.data.json);
       } catch (e) {
         console.log(e);
       }

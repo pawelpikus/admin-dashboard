@@ -1,15 +1,14 @@
 import { useEffect, useState } from "react";
-import { Button, Stack, Row, Table, Modal, Alert } from "react-bootstrap";
+import { Row } from "react-bootstrap";
 import { userDeleted } from "./usersSlice";
-import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import Layout from "./Layout";
 import axios from "axios";
-
-type ModalState = {
-  show: boolean;
-  id: string | null;
-};
+import ModalPopup from "./ModalPopup";
+import { ModalState } from "../../types/types";
+import TableContent from "./TableContent";
+import AddUserBtn from "./AddUserBtn";
+import UserListTitle from "./UserListTitle";
 
 const UserList = () => {
   const users = useAppSelector((state) => state.users);
@@ -20,7 +19,6 @@ const UserList = () => {
     show: false,
     id: null,
   });
-
   const [usersAmount, setUsersAmount] = useState(0);
 
   useEffect(() => {
@@ -60,94 +58,29 @@ const UserList = () => {
     }
   };
 
-  const modalComponent = (
-    <Modal show={modal.show} onHide={handleClose}>
-      <Modal.Header closeButton>
-        <Modal.Title>Confirm Delete</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>Are you sure you want to delete the user?</Modal.Body>
-      <Modal.Footer>
-        <Button variant="outline-secondary" onClick={handleClose}>
-          Close
-        </Button>
-        <Button variant="danger" onClick={handleConfirmDelete}>
-          Confirm Delete
-        </Button>
-      </Modal.Footer>
-    </Modal>
-  );
-
-  let tableContent;
-  if (loading) {
-    tableContent = <Alert variant={"info"}>Loading users...</Alert>;
-  } else if (error) {
-    tableContent = (
-      <Alert variant={"danger"}>Failed to load users. Try again later.</Alert>
-    );
-  } else if (usersAmount === 0) {
-    tableContent = (
-      <Alert variant={"warning"}>No users. Try to add someone!</Alert>
-    );
-  } else {
-    tableContent = (
-      <Table striped bordered hover>
-        <thead>
-          <tr>
-            <th scope="col">Id</th>
-            <th scope="col">Name</th>
-            <th scope="col">Username</th>
-            <th scope="col">Email</th>
-            <th scope="col">City</th>
-            <th scope="col">Edit</th>
-            <th scope="col">Delete</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.entities.map(({ id, name, username, email, address }, i) => (
-            <tr key={i}>
-              <th scope="row">{id}</th>
-              <td>{name}</td>
-              <td>{username}</td>
-              <td>{email}</td>
-              <td>{address?.city}</td>
-              <td>
-                <Link to={`/edit-user/${id}`}>
-                  <Button variant="warning">Edit</Button>
-                </Link>
-              </td>
-              <td>
-                <Button
-                  onClick={() => handleShow(id.toString())}
-                  variant="danger"
-                >
-                  Delete
-                </Button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
-    );
-  }
-
   return (
     <Layout>
-      {modal ? modalComponent : null}
+      {modal ? (
+        <ModalPopup
+          modal={modal}
+          handleClose={handleClose}
+          handleConfirmDelete={handleConfirmDelete}
+        />
+      ) : null}
       <Row>
-        <Stack
-          direction="horizontal"
-          gap={3}
-          className="d-flex justify-content-between ms-auto bg-light p-3"
-        >
-          <h4>User List</h4>
-          <Link to="/add-user">
-            <Button variant="primary" className="ms-auto">
-              Add user
-            </Button>
-          </Link>
-        </Stack>
+        <UserListTitle>
+          <AddUserBtn />
+        </UserListTitle>
       </Row>
-      <Row>{tableContent}</Row>
+      <Row>
+        <TableContent
+          loading={loading}
+          error={error}
+          usersAmount={usersAmount}
+          handleShow={handleShow}
+          users={users}
+        />
+      </Row>
     </Layout>
   );
 };

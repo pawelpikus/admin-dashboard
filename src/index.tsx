@@ -1,6 +1,5 @@
 import ReactDOM from "react-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
-import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import UserList from "./components/users/UserList";
@@ -16,9 +15,7 @@ ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<App />}>
-          <Route index element={<UserList />} />
-        </Route>
+        <Route index element={<UserList />} />
         <Route path="/add-user" element={<AddUser />}></Route>
         <Route path="/edit-user/:id" element={<EditUser />}></Route>
       </Routes>

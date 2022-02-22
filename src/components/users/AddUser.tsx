@@ -15,7 +15,7 @@ const AddUser = () => {
     name: "",
     email: "",
   });
-  const [errors, setErrors] = useState({ name: "", email: "" });
+  const [errors, setErrors] = useState({ name: "", email: "", api: "" });
   const [validated, setValidated] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -70,7 +70,10 @@ const AddUser = () => {
           },
         });
       } catch (e) {
-        console.log(e);
+        setErrors({
+          ...errors,
+          api: "There has been a problem posting data. Try again later.",
+        });
       }
       dispatch(
         userAdded({
@@ -89,7 +92,9 @@ const AddUser = () => {
     }
   };
 
-  return (
+  return errors.api ? (
+    <div>{errors.api}</div>
+  ) : (
     <Layout>
       <Row className="border bg-light mb-4 py-4">
         <h4>Add new User</h4>

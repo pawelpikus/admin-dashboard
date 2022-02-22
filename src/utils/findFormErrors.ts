@@ -7,7 +7,7 @@ export const findFormErrors = (form: Form) => {
   if (form) {
     const { name, email } = form;
     const emailPattern = /^[^@ ]+@[^@ ]+\.[^@ .]{2,}$/;
-    const newErrors = { name: "", email: "" };
+    const newErrors = { name: "", email: "", api: "" };
     if (!name || name === "") newErrors.name = "Fill in this field.";
     else if (name.length > 30) newErrors.name = "Name is too long.";
     if (!email || email === "") newErrors.email = "Fill in this field.";
