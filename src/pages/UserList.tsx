@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { Row } from "react-bootstrap";
-import { userDeleted } from "./usersSlice";
-import { useAppDispatch, useAppSelector } from "../../hooks";
-import Layout from "./Layout";
+import { userDeleted } from "../redux/usersSlice";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import Layout from "../components/users/Layout";
 import axios from "axios";
-import ModalPopup from "./ModalPopup";
-import { ModalState } from "../../types/types";
-import TableContent from "./TableContent";
-import AddUserBtn from "./AddUserBtn";
-import UserListTitle from "./UserListTitle";
+import ModalPopup from "../components/users/ModalPopup";
+import { ModalState } from "../types/types";
+import TableContent from "../components/users/TableContent";
+import AddUserBtn from "../components/users/AddUserBtn";
+import UserListTitle from "../components/users/UserListTitle";
 
 const UserList = () => {
   const users = useAppSelector((state) => state.users);

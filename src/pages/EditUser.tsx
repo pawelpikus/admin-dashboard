@@ -1,23 +1,30 @@
-import axios from "axios";
-import React, { useState, useRef } from "react";
-import { Button, Col, Form, Row } from "react-bootstrap";
-import { useNavigate, Link } from "react-router-dom";
-import { useAppDispatch } from "../../hooks";
-import { findFormErrors } from "../../utils/findFormErrors";
-import { hasKey } from "../../utils/hasKey";
-import Layout from "./Layout";
-import { userAdded } from "./usersSlice";
+import { useState, useRef } from "react";
+import { userUpdated } from "../redux/usersSlice";
+import { useNavigate, useLocation, Link } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
 
-const AddUser = () => {
-  const dispatch = useAppDispatch();
-  let navigate = useNavigate();
+import { Row, Form, Col, Button } from "react-bootstrap";
+import Layout from "../components/users/Layout";
+import { hasKey } from "../utils/hasKey";
+import { findFormErrors } from "../utils/findFormErrors";
+import axios from "axios";
+
+const EditUser = () => {
+  const { pathname } = useLocation();
+  const userId = pathname.replace("/edit-user/", "");
+  const user = useAppSelector((state) =>
+    state.users.entities.find((user) => user.id.toString() === userId)
+  );
   const [form, setForm] = useState({
-    name: "",
-    email: "",
+    name: user?.name,
+    email: user?.email,
   });
-  const [errors, setErrors] = useState({ name: "", email: "", api: "" });
+
+  const [errors, setErrors] = useState({ name: "", email: "" });
   const [validated, setValidated] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const setField = (field: string, value: string) => {
     setForm({
@@ -33,12 +40,8 @@ const AddUser = () => {
     }
   };
 
-  const generateUID = (): number => {
-    let uid = Math.floor(Math.random() * 100);
-    return uid;
-  };
-
   findFormErrors(form);
+
   const handleReset = () => {
     if (formRef.current) {
       formRef.current.reset();
@@ -58,32 +61,26 @@ const AddUser = () => {
     if (!isEmptyErrors && newErrors) {
       setErrors(newErrors);
     } else {
-      const uid = generateUID();
       try {
-        await axios.post(`https://jsonplaceholder.typicode.com/posts/`, {
-          id: uid,
-          name: form.name,
-          email: form.email,
-          username: "",
-          address: {
-            city: "",
-          },
-        });
+        await axios.put(
+          `https://jsonplaceholder.typicode.com/posts/${userId}`,
+          {
+            ...user,
+            id: Number(userId),
+            name: form.name,
+            email: form.email,
+          }
+        );
       } catch (e) {
-        setErrors({
-          ...errors,
-          api: "There has been a problem posting data. Try again later.",
-        });
+        console.log(e);
       }
+
       dispatch(
-        userAdded({
-          id: generateUID(),
+        userUpdated({
+          ...user,
+          id: Number(userId),
           name: form.name,
           email: form.email,
-          username: "",
-          address: {
-            city: "",
-          },
         })
       );
       setValidated(true);
@@ -92,12 +89,10 @@ const AddUser = () => {
     }
   };
 
-  return errors.api ? (
-    <div>{errors.api}</div>
-  ) : (
+  return (
     <Layout>
       <Row className="border bg-light mb-4 py-4">
-        <h4>Add new User</h4>
+        <h4>Edit User</h4>
       </Row>
       <Form
         ref={formRef}
@@ -150,7 +145,7 @@ const AddUser = () => {
             <Button variant="outline-danger">Cancel</Button>
           </Link>
           <Button className="mx-3" variant="primary" type="submit">
-            Submit
+            Save User
           </Button>
         </div>
       </Form>
@@ -158,4 +153,4 @@ const AddUser = () => {
   );
 };
 
-export default AddUser;
+export default EditUser;

@@ -1,18 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { userState } from "../types/types";
 
-interface userState {
-  entities: {
-    id: number;
-    name: string;
-    username?: string;
-    email: string;
-    address?: {
-      city?: string;
-    };
-  }[];
-  loading: boolean;
-  error: boolean;
-}
 const initialState: userState = {
   entities: [],
   loading: false,

@@ -2,12 +2,12 @@ import ReactDOM from "react-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import UserList from "./components/users/UserList";
+import UserList from "./pages/UserList";
 import { Provider } from "react-redux";
-import { store } from "./store";
-import AddUser from "./components/users/AddUser";
-import EditUser from "./components/users/EditUser";
-import { fetchUsers } from "./components/users/usersSlice";
+import { store } from "./redux/store";
+import AddUser from "./pages/AddUser";
+import EditUser from "./pages/EditUser";
+import { fetchUsers } from "./redux/usersSlice";
 
 store.dispatch(fetchUsers());
 
