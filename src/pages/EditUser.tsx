@@ -4,7 +4,7 @@ import { useNavigate, useLocation, Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 
 import { Row, Form, Col, Button } from "react-bootstrap";
-import Layout from "../components/users/Layout";
+import Layout from "../components/Layout";
 import { hasKey } from "../utils/hasKey";
 import { findFormErrors } from "../utils/findFormErrors";
 import axios from "axios";

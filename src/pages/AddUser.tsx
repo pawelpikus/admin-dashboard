@@ -5,7 +5,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useAppDispatch } from "../redux/hooks";
 import { findFormErrors } from "../utils/findFormErrors";
 import { hasKey } from "../utils/hasKey";
-import Layout from "../components/users/Layout";
+import Layout from "../components/Layout";
 import { userAdded } from "../redux/usersSlice";
 
 const AddUser = () => {

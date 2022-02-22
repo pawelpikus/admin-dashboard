@@ -1,5 +1,5 @@
 import { Button, Modal } from "react-bootstrap";
-import { IModalPopup } from "../../types/types";
+import { IModalPopup } from "../types/types";
 
 const ModalPopup = ({
   modal,
